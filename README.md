@@ -3,7 +3,7 @@ This is my first project.</br>
 I am making a simple snake game for my project.</br>
 </br>
 Author-</br>
-Maharaj Hossain
-Registration-2021831040
+Maharaj Hossain</br>
+Registration-2021831040</br>
 Shahjalal University of Science and Technology
     
