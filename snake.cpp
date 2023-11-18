@@ -13,21 +13,21 @@ void snakefood()
     cout<<"score:"<<score++<<endl;
     foodX = rand() % (780 /10 ) * 10;
     foodY = rand() % (580 / 10) * 10;
-    if(dir==1)
+    if(direction==1)
     {
-         v.push_back( make_pair(recx+10,recy) );
+         v.push_back( make_pair(rectenglex+10,rectengley) );
     }
-    else if(dir==2)
+    else if(direction==2)
     {
-         v.push_back( make_pair(recx-10,recy) );
+         v.push_back( make_pair(rectenglex-10,rectengley) );
     }
-    else if(dir==3)
+    else if(direction==3)
     {
-         v.push_back( make_pair(recx,recy+10) );
+         v.push_back( make_pair(rectenglex,rectengley+10) );
     }
-    else if(dir==4)
+    else if(direction==4)
     {
-         v.push_back( make_pair(recx,recy-10) );
+         v.push_back( make_pair(rectenglex,rectengley-10) );
     }
 }
 void DrawRect(int x, int y) {
@@ -38,33 +38,33 @@ void direction()
 {
     if (event.type == SDL_KEYDOWN) 
                 {switch (event.key.keysym.sym) 
-                    {case SDLK_UP:
-                          { if(dir==3)
-                          continue;
-                          else
-                            {dir=4;
-                          break;}}
-                    case SDLK_DOWN:
-                        { if(dir==4)
-                        continue;
-                        else
-                        {dir=3;
-                      
-                        break;}
-                        }
-                    case SDLK_LEFT:
-                     { if(dir==1)
+                    {
+                        case SDLK_LEFT:
+                     { if(direction==1)
                      continue;
                      else
-                        {dir=2;
+                        {direction=2;
                     
                      break;}}
                     case SDLK_RIGHT:
-                    { if(dir==2)
+                    { if(direction==2)
                     continue;
                     else
-                        {dir=1;
+                        {direction=1;
                         break;}}
+                        case SDLK_UP:
+                          { if(direction==3)
+                          continue;
+                          else
+                            {direction=4;
+                          break;}}
+                    case SDLK_DOWN:
+                        { if(direction==4)
+                        continue;
+                        else
+                        {direction=3;
+                        break;}
+                        }
 
     } }
     }
@@ -78,6 +78,23 @@ void direction()
          int y=foodY+rad*sin(angle*M_PI/180);
          SDL_RenderDrawPoint(renderer,x,y);}
     }
+    void foodcollision()
+    {
+         if(((foodX-rectenglex)<=20&&(foodX-rectenglex)>=0)&&((rectengley-foodY)>=0&&(rectengley-foodY)<=10))
+   { snakefood();
+
+   }
+  else if(((foodX-rectenglex)<=20&&(foodX-rectenglex)>=0)&&((foodY-rectengley)>=0&&(foodY-rectengley)<=20))
+   { snakefood();
+   }
+  else if(((rectenglex-foodX)<=10&&(rectenglex-foodX)>=0)&&((foodY-rectengley)>=0&&(foodY-rectengley)<=20))
+   { snakefood();
+   }
+   else if(((foodX-rectenglex)<=10&&(foodX-rectenglex)>=0)&&((foodY-rectengley)>=0&&(foodY-rectengley)<=20))
+   { snakefood();
+   }
+    }
+    
 
 SDL_Window* window=SDL_CreateWindow("Snake Game",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,800,600,SDL_WINDOW_SHOWN);
 SDL_Renderer* renderer=SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
