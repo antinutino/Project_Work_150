@@ -103,7 +103,18 @@ void nextdirection()
    rectengley=590;}
     }
   void movebody()
-  /*void snakecollision()
+  {   snakehead();
+    snakebody1=snakebody;
+    snakebody[snakebody.size()-1].first=rectenglex;
+    snakebody[snakebody.size()-1].second=rectengley;
+    DrawRect(snakebody[snakebody.size()-1].first,snakebody1[snakebody.size()-1].second);
+    for(int i=snakebody.size()-1;i>0;i--)
+    { snakebody[i-1]=snakebody1[i];
+        DrawRect(snakebody[i].first,snakebody[i].second);
+    }
+
+  }
+  void snakecollision()
      {
         for(int i=0;i<snakebody.size()-2;i++)
           {
@@ -118,18 +129,7 @@ void nextdirection()
                }
           }
 
-     }*/
-  {   snakehead();
-    snakebody1=snakebody;
-    snakebody[snakebody.size()-1].first=rectenglex;
-    snakebody[snakebody.size()-1].second=rectengley;
-    DrawRect(snakebody[snakebody.size()-1].first,snakebody1[snakebody.size()-1].second);
-    for(int i=snakebody.size()-1;i>0;i--)
-    { snakebody[i-1]=snakebody1[i];
-        DrawRect(snakebody[i].first,snakebody[i].second);
-    }
-
-  }
+     }
 int main(int argc,char* argv[])
 {
     if(SDL_Init(SDL_INIT_VIDEO)!=0)
@@ -158,10 +158,10 @@ while(quit!=true)
     Drawfood();
     foodcollision();
     movebody();
-    //snakecollision();
+    snakecollision();
          SDL_RenderPresent(renderer);
           if(score<=10)
-          SDL_Delay(5000);
+          SDL_Delay(70);
            else if(score>10&&score<=20)
           SDL_Delay(60);
        else if(score>20&&score<=30)
