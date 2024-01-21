@@ -1,9 +1,12 @@
 #include<bits/stdc++.h>
 #include<math.h>
 #include<SDL2/SDL.h>
+//#include "include/SDL_ttf.h"
 using namespace std;
 int foodX;
 int foodY;
+int bonusfoodx;
+int bonusfoody;
 int border=40;
 int pathweidth=40;
 int screenheight=600;
@@ -13,8 +16,15 @@ int score=0;
 int foodcol1=30;
 int foodcol2=10;
 int puse=0;
+bool quit1=false;
 int rectenglex=100;
 int rectengley=100;
+int foodred=252;
+int foodgreen=194;
+int foodblue=0;
+int snakered=245;
+int snakegreen=222;
+int snakeblue=180;
 vector<pair<int,int>>snakebody;
 vector<pair<int,int>>snakebody1;
 vector<pair<int,int>>foodposition;
@@ -161,6 +171,27 @@ x=300;y=200;
     SDL_RenderFillRect(renderer, &rect);
 
 }
+/*void bonusfooddraw()
+{
+    SDL_SetRenderDrawColor(renderer,200,20,20,0);
+         while(radius--)
+    for(int angle=0;angle<360;angle++)
+    {
+        int x=bonusfoodx+radius*cos(angle*M_PI/180);
+         int y=bonusfoody+radius*sin(angle*M_PI/180);
+         SDL_RenderDrawPoint(renderer,x,y);}
+         Uint32 start_time = SDL_GetTicks();
+    while (SDL_GetTicks() - start_time < 5000) {
+        SDL_RenderPresent(renderer);
+    }
+}
+void bonusfood()
+{   int x=foodposition.size();
+    int randi=(rand() %x);
+    bonusfoodx = foodposition[randi].first;
+    bonusfoody = foodposition[randi].second;
+     bonusfooddraw();
+}*/
 void foodpos()
 {
     cout<<"score:"<<score++<<endl;
@@ -168,6 +199,8 @@ void foodpos()
     int randi=(rand() %x);
     foodX = foodposition[randi].first;
     foodY = foodposition[randi].second;
+    //if(score>0&&(score-1)%7==0)
+    //bonusfood();
     if(direction==1)
     {
          snakebody.push_back( make_pair(rectenglex+10,rectengley) );
@@ -219,8 +252,8 @@ void nextdirection()
 
     } }
     void Drawfood()
-    {  SDL_SetRenderDrawColor(renderer,200,180,30,0);
-        int radius=10;
+    {  int radius=10;
+          SDL_SetRenderDrawColor(renderer,foodred,foodgreen,foodblue,0);
          while(radius--)
     for(int angle=0;angle<360;angle++)
     {
@@ -231,13 +264,22 @@ void nextdirection()
     void foodcollision()
     {
          if(((foodX-rectenglex)<foodcol1&&(foodX-rectenglex)>=0)&&((rectengley-foodY)>=0&&(rectengley-foodY)<foodcol2))
-         foodpos();
+         {swap(foodred,snakered);
+        swap(foodgreen,snakegreen);
+        swap(foodblue,snakeblue);foodpos();}
   else if(((foodX-rectenglex)<foodcol1&&(foodX-rectenglex)>=0)&&((foodY-rectengley)>=0&&(foodY-rectengley)<foodcol1))
-         foodpos();
+         {swap(foodred,snakered);
+        swap(foodgreen,snakegreen);
+        swap(foodblue,snakeblue);foodpos();}
   else if(((rectenglex-foodX)<foodcol2&&(rectenglex-foodX)>=0)&&((foodY-rectengley)>=0&&(foodY-rectengley)<foodcol1))
-        foodpos();
+        {swap(foodred,snakered);
+        swap(foodgreen,snakegreen);
+        swap(foodblue,snakeblue);foodpos();}
    else if(((foodX-rectenglex)<foodcol2&&(foodX-rectenglex)>=0)&&((foodY-rectengley)>=0&&(foodY-rectengley)<foodcol1))
-        foodpos();
+        {swap(foodred,snakered);
+        swap(foodgreen,snakegreen);
+        swap(foodblue,snakeblue);foodpos();}
+        
     }
  void snakehead()
     {
@@ -268,38 +310,32 @@ void nextdirection()
     snakebody1=snakebody;
     snakebody[snakebody.size()-1].first=rectenglex;
     snakebody[snakebody.size()-1].second=rectengley;}
-    SDL_SetRenderDrawColor(renderer,0,0,0,220);
+    SDL_SetRenderDrawColor(renderer,snakered,snakegreen,snakeblue,0);
     DrawRect(snakebody[snakebody.size()-1].first,snakebody[snakebody.size()-1].second);
     for(int i=snakebody.size()-1;i>0;i--)
     { snakebody[i-1]=snakebody1[i];
         DrawRect(snakebody[i].first,snakebody[i].second);
+
     }
 
   }
   void snakecollision()
      { if(rectenglex>800||rectenglex<0||rectengley>600||rectengley<0)
-        {  SDL_SetRenderDrawColor(renderer,50,100,50,255);
-                        SDL_RenderClear(renderer);
-                 SDL_RenderPresent(renderer);
-                     SDL_Delay(2000);
-                cout<<"GAME IS OVER"<<endl;
+        {  
+                     
+                cout<<"GAME IS OVER"<<endl; 
                 quit=true;
                }
                if(mp[{rectenglex,rectengley}]!=1)
-               {  SDL_SetRenderDrawColor(renderer,50,100,50,255);
-                        SDL_RenderClear(renderer);
-                 SDL_RenderPresent(renderer);
-                     SDL_Delay(2000);
+               {  
+                     
                 cout<<"GAME IS OVER"<<endl;
                 quit=true;
                }
         for(int i=0;i<snakebody.size()-3;i++)
           {
                if(snakebody[i].first==rectenglex&&snakebody[i].second==rectengley)
-               {  SDL_SetRenderDrawColor(renderer,50,100,50,255);
-                        SDL_RenderClear(renderer);
-                 SDL_RenderPresent(renderer);
-                     SDL_Delay(2000);
+               { 
                 cout<<"GAME IS OVER"<<endl;
                 quit=true;
                   break;
@@ -307,6 +343,81 @@ void nextdirection()
           }
 
      }
+      void mainbody()
+     { 
+ snakebody.push_back( make_pair(rectenglex,rectengley) );
+ snakebody.push_back( make_pair(rectenglex+10,rectengley) );
+ rectenglex+=10;
+ foodpos();
+ while(quit!=true)
+{
+    while(SDL_PollEvent(&event))
+    {
+        if(event.type==SDL_QUIT)
+{
+    quit=true;
+}
+     else if(event.type == SDL_KEYDOWN) 
+     nextdirection();
+    }
+    SDL_SetRenderDrawColor(renderer,0,200,80,0);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer,30,30,30,200);
+    pathset();
+    //SDL_SetRenderDrawColor(renderer,30,30,0,220);
+    Drawfood();
+    foodcollision();
+    movebody();
+    snakecollision();
+         SDL_RenderPresent(renderer);
+          SDL_Delay(80); 
+}    
+        while(quit1!=true) 
+     {  
+        SDL_SetRenderDrawColor(renderer,30,30,30,210);
+        SDL_Rect rect = { 0,0 ,800, 600};
+    SDL_RenderFillRect(renderer, &rect);
+    SDL_SetRenderDrawColor(renderer,255,220,180,0);
+     rect = { 380,280 , 40, 40};
+    SDL_RenderFillRect(renderer, &rect);
+                 SDL_RenderPresent(renderer);
+        int mousex,mousey;
+         while(SDL_PollEvent(&event))
+    {
+        if(event.type==SDL_QUIT)
+{
+    quit1=true;
+    break;
+}
+        if(SDL_MOUSEMOTION==event.type)
+        {
+            SDL_GetMouseState(&mousex,&mousey);}
+            if(SDL_MOUSEBUTTONDOWN==event.type)
+            {
+                if(SDL_BUTTON_LEFT==event.button.button)
+                  {  if(mousex>=380&&mousex<=420&&mousey>=280&&mousey<=320)
+                      {quit=false;
+                      direction=1;
+                      score=0;
+                    rectenglex=100;
+                    rectengley=100;
+            snakebody.clear();
+            snakebody1.clear();
+                 mainbody();
+                 quit=true;
+                 quit1=true;
+                 }
+
+                  }
+            }
+        }
+     }
+
+
+     }
+     
+     
+    
 int main(int argc,char* argv[])
 {
     if(SDL_Init(SDL_INIT_VIDEO)!=0)
@@ -314,10 +425,7 @@ int main(int argc,char* argv[])
         cout<<"SDL_Init Error"<<endl;
         return 1;
     }
-  snakecordinate();
- snakebody.push_back( make_pair(rectenglex,rectengley) );
- snakebody.push_back( make_pair(rectenglex+10,rectengley) );
- rectenglex+=10;
+   snakecordinate();
  foodcordinatex(45,295,120);
  foodcordinatex(45,595,420);
  foodcordinatey(105,395,220);
@@ -343,30 +451,8 @@ int main(int argc,char* argv[])
  foodcordinatey(205,295,320);
  foodcordinatex(205,335,320);
  foodcordinatex(555,695,320);
- foodpos();
-while(quit!=true)
-{
-    while(SDL_PollEvent(&event))
-    {
-        if(event.type==SDL_QUIT)
-{
-    quit=true;
-}
-     else if(event.type == SDL_KEYDOWN) 
-     nextdirection();
-    }
-    SDL_SetRenderDrawColor(renderer,0,200,80,0);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer,0,50,200,0);
-    pathset();
-    SDL_SetRenderDrawColor(renderer,0,0,0,220);
-    Drawfood();
-    foodcollision();
-    movebody();
-    snakecollision();
-         SDL_RenderPresent(renderer);
-          SDL_Delay(80); 
-}
+  mainbody();
+
  SDL_DestroyRenderer(renderer);
  SDL_DestroyWindow(window);
  SDL_Quit();
